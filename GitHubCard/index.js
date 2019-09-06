@@ -8,7 +8,7 @@ const cards = document.querySelector(".cards");
 axios.get("https://api.github.com/users/raaudain")
   .then(response =>{
     console.log(response);
-    cards.appendChild(newList(response.info));
+    cards.appendChild(createFollowersList(response.data));
   })
 
   .catch(error => {
@@ -57,25 +57,24 @@ const autoFollowerArray = [];
 axios.get("https://api.github.com/users/raaudain/followers")
   .then(response =>{
     console.log(response);
-    response.data.forEach(follower =>{
+    response.data.map(follower =>{
       autoFollowerArray.push(follower.login);
     })
-  })
-    .catch(error => {
-      console.log("Error!!! -- ", error);
-    })
-
-autoFollowerArray.forEach(follower =>{
-  axios.get(`https://api.github.com/users/${follower}`)
-  .then(response =>{
-      console.log(response);
-      cards.appendChild(newList(response.info));
-      })
+      autoFollowerArray.forEach(follower =>{
+        axios.get(`https://api.github.com/users/${follower}`)
         
-      .catch(error => {
-        console.log("Error!!! -- ", error);
-      });
-    })
+        .then(response =>{
+            console.log(response);
+            cards.appendChild(createFollowersList(response.data));
+            })
+      })
+  })
+  
+  .catch(error => {
+      console.log("Error!!! -- ", error);
+  })
+
+
  
     
   
@@ -103,7 +102,9 @@ autoFollowerArray.forEach(follower =>{
 
 */
 
-function newList(info){
+
+function createFollowersList(data){
+
   const card = document.createElement("div");
   const img = document.createElement("img");
   const cardInfo = document.createElement("div");
@@ -121,16 +122,16 @@ function newList(info){
   name.classList.add("name");
   username.classList.add("username");
 
-  img.src = `${info.avatar_url}`;
-  name.textContent = `${info.name}`;
-  username.textContent = `${info.login}`;
-  location.textContent = `Location: ${info.location}`;
+  img.src = `${data.avatar_url}`;
+  name.textContent = `${data.name}`;
+  username.textContent = `${data.login}`;
+  location.textContent = `Location: ${data.location}`;
   profile.textContent = `Profile: `;
-  link.href = info.html_url;
-  link.textContent = info.html_url;
-  followers.textContent = `Followers: ${info.followers}`;
-  following.textContent = `Following: ${info.following}`;
-  bio.textContent = `Bio: ${info.bio}`;
+  link.href = data.html_url;
+  link.textContent = data.html_url;
+  followers.textContent = `Followers: ${data.followers}`;
+  following.textContent = `Following: ${data.following}`;
+  bio.textContent = `Bio: ${data.bio}`;
 
   card.appendChild(img);
   card.appendChild(cardInfo);
@@ -145,50 +146,6 @@ function newList(info){
   
   return card;
 }
-
-// function createFollowersList(data){
-
-//   const card = document.createElement("div");
-//   const img = document.createElement("img");
-//   const cardInfo = document.createElement("div");
-//   const name = document.createElement("h3");
-//   const username = document.createElement("p");
-//   const location = document.createElement("p");
-//   const profile = document.createElement("p");
-//   const link = document.createElement("a");
-//   const followers = document.createElement("p");
-//   const following = document.createElement("p");
-//   const bio = document.createElement("p");
-
-//   card.classList.add("card");
-//   cardInfo.classList.add("card-info");
-//   name.classList.add("name");
-//   username.classList.add("username");
-
-//   img.src = `${data.avatar_url}`;
-//   name.textContent = `${data.name}`;
-//   username.textContent = `${data.login}`;
-//   location.textContent = `Location: ${data.location}`;
-//   profile.textContent = `Profile: `;
-//   link.href = data.html_url;
-//   link.textContent = data.html_url;
-//   followers.textContent = `Followers: ${data.followers}`;
-//   following.textContent = `Following: ${data.following}`;
-//   bio.textContent = `Bio: ${data.bio}`;
-
-//   card.appendChild(img);
-//   card.appendChild(cardInfo);
-//   cardInfo.appendChild(name);
-//   cardInfo.appendChild(username);
-//   cardInfo.appendChild(location);
-//   cardInfo.appendChild(profile);
-//   profile.appendChild(link);
-//   cardInfo.appendChild(followers);
-//   cardInfo.appendChild(following);
-//   cardInfo.appendChild(bio);
-  
-//   return card;
-// }
 
 
 /* List of LS Instructors Github username's: 
